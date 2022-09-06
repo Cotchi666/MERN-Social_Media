@@ -29,3 +29,13 @@
   cursor   : pointer;
   opacity  : 0.5
 }
+
+.auth-page a img {
+  width: 100%;
+}
+
+/* .auth-page .S9gUrf-YoZ4jf,
+.S9gUrf-YoZ4jf #gsi_440267_807549 {
+  width: 100%;
+} */
+

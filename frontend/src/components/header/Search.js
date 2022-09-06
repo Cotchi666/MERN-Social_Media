@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getDataAPI } from '../../utils/fetchData'
 import { GLOBALTYPES } from '../../redux/actions/globalTypes'
@@ -18,22 +18,24 @@ const Search = () => {
         setUsers([])
     }
 
-    const handleSearch = async (e) => {
-        e.preventDefault()
-        if(!search) return
-        try{
-            setLoad(true)
-            const res = await  getDataAPI(`search?username=${search}`, auth.token)
-            setUsers(res.data.users)
-            setLoad(false)
-            
-        }catch(err){
-            dispatch({type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg }})
-
-        }
-    }
+    useEffect(async () => {
+      if (!search) return;
+  
+      try {
+        setLoad(true);
+        const res = await getDataAPI(`search?username=${search}`, auth.token);
+        //mongo data
+        setUsers(res.data.users);
+        setLoad(false);
+      } catch (err) {
+        dispatch({
+          type: GLOBALTYPES.ALERT,
+          payload: { error: err.response.data.msg },
+        });
+      }
+    }, [search]);
     return (
-    <form className="search-form" onSubmit={handleSearch}>
+    <form className="search-form">
         <input type="text" name = "search" value = {search} id = "search" title='Enter to search'
         onChange={e => setSearch(e.target.value.toLowerCase().replace(/ /g,''))}/>
 

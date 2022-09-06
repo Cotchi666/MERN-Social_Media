@@ -20,6 +20,23 @@ export const googleLogin = (data) => async (dispatch) => {
   });
   dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
 };
+export const gitLogin = (data) => async (dispatch) => {
+  console.log('git hub');
+  // dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+  // const res = await postGGDataAPI("google_login", data);
+  // console.log(res);
+  
+  dispatch({
+    type: GLOBALTYPES.AUTH,
+    payload: {
+      // token: res.data.access_token,
+      // user: res.data.user,
+    },
+  });
+  // dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+  localStorage.setItem("firstLogin", true);
+};
+
 
 export const login = (data) => async (dispatch) => {
   try {

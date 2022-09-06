@@ -13,6 +13,10 @@ export default function Login() {
   const [typePass, setTypeData] = useState(false);
   const { auth } = useSelector((state) => state);
 
+  const GITHUB_CLIENT_ID = "22bfe85b0f9406dc9fb2";
+  const gitHubRedirectURL = "http://localhost:5000/api/auth/github";
+  const path = "/";
+
   const dispatch = useDispatch();
   const history = useHistory();
   useEffect(() => {
@@ -34,13 +38,14 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async (googleData) => {
-    const dataParse =  jwtDecode(googleData.credential) ;
+    const dataParse = jwtDecode(googleData.credential);
     console.log(dataParse);
 
     dispatch(googleLogin(dataParse));
   };
 
-    const handleGoogleFailure = () => {
+
+  const handleGoogleFailure = () => {
     console.log("Failure");
   };
 
@@ -99,6 +104,16 @@ export default function Login() {
           onFailure={handleGoogleFailure}
           cookiePolicy={"single_host_origin"}
         ></GoogleLogin>
+
+        <a
+          href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${path}&scope=user:email`}
+       
+       >
+          <img
+            src="https://cloud.githubusercontent.com/assets/194400/11214293/4e309bf2-8d38-11e5-8d46-b347b2bd242e.png"
+            alt="Sign in with GitHub"
+          />
+        </a>
       </form>
     </div>
   );
