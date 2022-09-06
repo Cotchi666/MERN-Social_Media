@@ -10,13 +10,14 @@ import Header from "./components/header/Header";
 import StatusModal from "./components/StatusModal";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { refreshToken } from "./redux/actions/authAction";
 function App() {
   const { auth, status } = useSelector((state) => state);
   const dispatch = useDispatch();
-
+const [user,setUser]= useState("");
   useEffect(() => {
+
     dispatch(refreshToken());
   }, [dispatch]);
   return (

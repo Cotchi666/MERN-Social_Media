@@ -26,13 +26,13 @@ export const gitLogin = (data) => async (dispatch) => {
   // const res = await postGGDataAPI("google_login", data);
   // console.log(res);
   
-  dispatch({
-    type: GLOBALTYPES.AUTH,
-    payload: {
-      // token: res.data.access_token,
-      // user: res.data.user,
-    },
-  });
+  // dispatch({
+  //   type: GLOBALTYPES.AUTH,
+  //   payload: {
+  //     token: res.data.access_token,
+  //     user: res.data.user,
+  //   },
+  // });
   // dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
   localStorage.setItem("firstLogin", true);
 };

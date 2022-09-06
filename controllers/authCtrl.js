@@ -201,7 +201,7 @@ const authCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
-  gitHubLogin: async (req, res) => {
+  gitHubLogin: async (req, res, next) => {
     try {
       const code = req.query.code;
       const path = req.query.path;
@@ -254,15 +254,19 @@ const authCtrl = {
           path: "/api/refresh_token",
           maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
         });
-
-        res.json({
-          msg: "Login Success!",
-          access_token,
-          user: {
-            ...user._doc,
-            password: "",
-          },
+        res.cookie("jwt-cookie", access_token, {
+          httpOnly: true,
+          domain: "localhost",
         });
+        // res.json({
+        //   msg: "Login Success!",
+        //   access_token,
+        //   user: {
+        //     ...user._doc,
+        //     password: "",
+        //   },
+        // });
+        res.redirect(`http://localhost:3000${path}`);
         console.log("ok2");
       }
       // console.log("git hub user", githubUser);
@@ -271,7 +275,21 @@ const authCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  // git: async (req, res) => {
+  //   console.log(req.user)
+  //   next()
+  // }
+  me: async (req, res) => {
+    const cookie = req.cookies[COOKIE_NAME];
+    try {
+      const decode = jwt.verify(cookie, process.env.ACCESS_TOKEN_SECRET);
+      return res.send(decode);
+    } catch (e) {
+      return res.send(null);
+    }
+  },
 };
+
 const createAccessToken = (payload) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "1d",
