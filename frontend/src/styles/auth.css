@@ -31,11 +31,24 @@
 }
 
 .auth-page a img {
-  width: 100%;
+  width : 174px;
+  height: 66px;
+
 }
 
-/* .auth-page .S9gUrf-YoZ4jf,
-.S9gUrf-YoZ4jf #gsi_440267_807549 {
-  width: 100%;
-} */
+.auth-page .custom-btn {
+  display    : flex;
+  gap        : 0.2;
+  align-items: center;
+}
 
+.auth-page .S9gUrf-YoZ4jf,
+.S9gUrf-YoZ4jf #gsi_440267_807549 {
+  /* width: 38px; */
+
+}
+
+/* .nsm7Bb-HzV7m-LgbsSe-MJoBVe {
+  width: 38px;
+
+} */

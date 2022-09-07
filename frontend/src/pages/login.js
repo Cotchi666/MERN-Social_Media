@@ -108,21 +108,31 @@ export default function Login() {
             Register Now
           </Link>
         </p>
-        <GoogleLogin
-          buttonText="Login in with Google"
-          onSuccess={handleGoogleLogin}
-          onFailure={handleGoogleFailure}
-          cookiePolicy={"single_host_origin"}
-        ></GoogleLogin>
-
-        <a
-          href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${path}&scope=user:email`}
-        >
-          <img
-            src="https://cloud.githubusercontent.com/assets/194400/11214293/4e309bf2-8d38-11e5-8d46-b347b2bd242e.png"
-            alt="Sign in with GitHub"
+        <div className="custom-btn">
+          <GoogleLogin
+            text="signin with Google"
+            // size="medium"
+            shape="rectangular"
+            // locale="circle"
+            ux_mode="popup"
+            cancel_on_tap_outside
+            context="signin"
+            theme="outline"
+            width="70"
+            onSuccess={handleGoogleLogin}
+            onFailure={handleGoogleFailure}
+            cookiePolicy={"single_host_origin"}
           />
-        </a>
+
+          <a
+            href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${path}&scope=user:email`}
+          >
+            <img
+              src="https://coderwall-assets-0.s3.amazonaws.com/uploads/picture/file/4363/github.png"
+              alt="Sign in with GitHub"
+            />
+          </a>
+        </div>
       </form>
     </div>
   );
