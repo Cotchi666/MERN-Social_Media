@@ -280,11 +280,35 @@ const authCtrl = {
   //   next()
   // }
   me: async (req, res) => {
-    const cookie = req.cookies[COOKIE_NAME];
     try {
-      const decode = jwt.verify(cookie, process.env.ACCESS_TOKEN_SECRET);
-      return res.send(decode);
+      const cookie = req.cookies["jwt-cookie"];
+      // const cookie = get(req.cookies["jwt-cookie"]);
+      const decode = jwt.verify(
+        cookie,
+        process.env.ACCESS_TOKEN_SECRET,
+        async (err, result) => {
+          if (err) return res.status(400).json({ msg: "Please login now." });
+
+          const user = await Users.findById(result.id)
+            .select("-password")
+            .populate(
+              "followers followings",
+              "avatar username fullname followers followings"
+            );
+
+          if (!user)
+            return res.status(400).json({ msg: "This does not exist." });
+
+          const access_token = createAccessToken({ id: result.id });
+
+          res.json({
+            access_token,
+            user,
+          });
+        }
+      );
     } catch (e) {
+      console.log(e);
       return res.send(null);
     }
   },

@@ -15,9 +15,9 @@ import { refreshToken } from "./redux/actions/authAction";
 function App() {
   const { auth, status } = useSelector((state) => state);
   const dispatch = useDispatch();
-const [user,setUser]= useState("");
+  const [user, setUser] = useState("");
+  console.log("auth", auth);
   useEffect(() => {
-
     dispatch(refreshToken());
   }, [dispatch]);
   return (
@@ -28,8 +28,8 @@ const [user,setUser]= useState("");
         <div className="main">
           {/* put params */}
           {auth.token && <Header />}
-          {status && <StatusModal/>}
-          
+          {status && <StatusModal />}
+
           <Route exact path="/" component={auth.token ? Home : Login} />
           <Route exact path="/register" component={Register} />
 

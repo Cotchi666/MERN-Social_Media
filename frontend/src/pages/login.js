@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "../styles/auth.css";
 import jwtDecode from "jwt-decode";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 export default function Login() {
   const initialState = { email: "", password: "" };
@@ -12,7 +13,8 @@ export default function Login() {
   const { email, password } = userData;
   const [typePass, setTypeData] = useState(false);
   const { auth } = useSelector((state) => state);
-  const [data, setData] = useState([]);
+  const [user, setUser] = useState([]);
+
   const GITHUB_CLIENT_ID = "22bfe85b0f9406dc9fb2";
   const gitHubRedirectURL = "http://localhost:5000/api/auth/github";
   const path = "/";
@@ -47,7 +49,18 @@ export default function Login() {
   const handleGoogleFailure = () => {
     console.log("Failure");
   };
-  const dogit = () => {};
+  useEffect(() => {
+    (async function () {
+      const u = await axios
+        .get(`http://localhost:5000/api/me`, {
+          withCredentials: true,
+        })
+        .then((res) => res.data);
+      console.log(u);
+      setUser(u);
+    })
+    ();
+  },[]);
   return (
     <div className="auth-page">
       <form onSubmit={handleSubmit}>
@@ -106,7 +119,7 @@ export default function Login() {
 
         <a
           href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${path}&scope=user:email`}
-          onClick={dogit}
+          
         >
           <img
             src="https://cloud.githubusercontent.com/assets/194400/11214293/4e309bf2-8d38-11e5-8d46-b347b2bd242e.png"
