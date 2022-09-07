@@ -13,7 +13,6 @@ export default function Login() {
   const { email, password } = userData;
   const [typePass, setTypeData] = useState(false);
   const { auth } = useSelector((state) => state);
-  const [user, setUser] = useState([]);
 
   const GITHUB_CLIENT_ID = "22bfe85b0f9406dc9fb2";
   const gitHubRedirectURL = "http://localhost:5000/api/auth/github";
@@ -58,7 +57,6 @@ export default function Login() {
         .then((res) => res.data);
       console.log(u);
       dispatch(githubLogin(u));
-      setUser(u);
     })();
   }, []);
   return (

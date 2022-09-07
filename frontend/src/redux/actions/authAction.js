@@ -1,6 +1,7 @@
 import { postDataAPI, postGGDataAPI } from "../../utils/fetchData";
 import { GLOBALTYPES } from "./globalTypes";
 import valid from "../../utils/valid";
+import { withCookies, Cookies } from "react-cookie";
 
 export const TYPES = {
   AUTH: "AUTH",
@@ -131,6 +132,7 @@ export const register = (data) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   try {
     localStorage.removeItem("firstLogin");
+    // Cookies.remove("jwt-cookie");
     await postDataAPI("logout");
     window.location.href = "/";
   } catch (err) {
