@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { login, googleLogin } from "../redux/actions/authAction";
+import { login, googleLogin, githubLogin } from "../redux/actions/authAction";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/auth.css";
 import jwtDecode from "jwt-decode";
@@ -57,10 +57,10 @@ export default function Login() {
         })
         .then((res) => res.data);
       console.log(u);
+      dispatch(githubLogin(u));
       setUser(u);
-    })
-    ();
-  },[]);
+    })();
+  }, []);
   return (
     <div className="auth-page">
       <form onSubmit={handleSubmit}>
@@ -119,7 +119,6 @@ export default function Login() {
 
         <a
           href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${path}&scope=user:email`}
-          
         >
           <img
             src="https://cloud.githubusercontent.com/assets/194400/11214293/4e309bf2-8d38-11e5-8d46-b347b2bd242e.png"

@@ -1,6 +1,6 @@
 import { postDataAPI, postGGDataAPI } from "../../utils/fetchData";
 import { GLOBALTYPES } from "./globalTypes";
-import valid from '../../utils/valid'
+import valid from "../../utils/valid";
 
 export const TYPES = {
   AUTH: "AUTH",
@@ -10,7 +10,7 @@ export const googleLogin = (data) => async (dispatch) => {
   dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
   const res = await postGGDataAPI("google_login", data);
   console.log(res);
-  
+
   dispatch({
     type: GLOBALTYPES.AUTH,
     payload: {
@@ -20,29 +20,28 @@ export const googleLogin = (data) => async (dispatch) => {
   });
   dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
 };
-export const gitLogin = (data) => async (dispatch) => {
-  console.log('git hub');
-  // dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
-  // const res = await postGGDataAPI("google_login", data);
-  // console.log(res);
-  
-  // dispatch({
-  //   type: GLOBALTYPES.AUTH,
-  //   payload: {
-  //     token: res.data.access_token,
-  //     user: res.data.user,
-  //   },
-  // });
-  // dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
-  localStorage.setItem("firstLogin", true);
-};
+export const githubLogin = (data) => async (dispatch) => {
+  console.log("git hub");
+  if (data) {
+    dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
 
+    dispatch({
+      type: GLOBALTYPES.AUTH,
+      payload: {
+        token: data.access_token,
+        user: data.user,
+      },
+    });
+    dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+    localStorage.setItem("firstLogin", true);
+  }
+};
 
 export const login = (data) => async (dispatch) => {
   try {
     dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
     const res = await postDataAPI("login", data);
-   console.log(res);
+    console.log(res);
 
     dispatch({
       type: GLOBALTYPES.AUTH,
