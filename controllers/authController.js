@@ -1,20 +1,20 @@
-const jwt = require('jwt-simple');
-const crypto = require('crypto');
-const User = require('../models/User');
-const ConfirmationToken = require('../models/ConfirmationToken');
-const bcrypt = require('bcrypt');
-const axios = require('axios');
+const jwt = require("jwt-simple");
+const crypto = require("crypto");
+const User = require("../models/User");
+const ConfirmationToken = require("../models/ConfirmationToken");
+const bcrypt = require("bcrypt");
+const axios = require("axios");
 
 const {
   sendConfirmationEmail,
   generateUniqueUsername,
-} = require('../utils/controllerUtils');
+} = require("../utils/controllerUtils");
 const {
   validateEmail,
   validateFullName,
   validateUsername,
   validatePassword,
-} = require('../utils/validation');
+} = require("../utils/validation");
 
 module.exports.verifyJwt = (token) => {
   return new Promise(async (resolve, reject) => {
@@ -22,22 +22,22 @@ module.exports.verifyJwt = (token) => {
       const id = jwt.decode(token, process.env.JWT_SECRET).id;
       const user = await User.findOne(
         { _id: id },
-        'email username avatar bookmarks bio fullName confirmed website'
+        "email username avatar bookmarks bio fullName confirmed website"
       );
       if (user) {
         return resolve(user);
       } else {
-        reject('Not authorized.');
+        reject("Not authorized.");
       }
     } catch (err) {
-      return reject('Not authorized.');
+      return reject("Not authorized.");
     }
   });
 };
 
 module.exports.requireAuth = async (req, res, next) => {
   const { authorization } = req.headers;
-  if (!authorization) return res.status(401).send({ error: 'Not authorized.' });
+  if (!authorization) return res.status(401).send({ error: "Not authorized." });
   try {
     const user = await this.verifyJwt(authorization);
     // Allow other middlewares to access the authenticated user details.
@@ -80,7 +80,7 @@ module.exports.loginAuthentication = async (req, res, next) => {
   if (!usernameOrEmail || !password) {
     return res
       .status(400)
-      .send({ error: 'Please provide both a username/email and a password.' });
+      .send({ error: "Please provide both a username/email and a password." });
   }
 
   try {
@@ -89,7 +89,7 @@ module.exports.loginAuthentication = async (req, res, next) => {
     });
     if (!user || !user.password) {
       return res.status(401).send({
-        error: 'The credentials you provided are incorrect, please try again.',
+        error: "The credentials you provided are incorrect, please try again.",
       });
     }
 
@@ -100,7 +100,7 @@ module.exports.loginAuthentication = async (req, res, next) => {
       if (!result) {
         return res.status(401).send({
           error:
-            'The credentials you provided are incorrect, please try again.',
+            "The credentials you provided are incorrect, please try again.",
         });
       }
 
@@ -140,7 +140,7 @@ module.exports.register = async (req, res, next) => {
     user = new User({ username, fullName, email, password });
     confirmationToken = new ConfirmationToken({
       user: user._id,
-      token: crypto.randomBytes(20).toString('hex'),
+      token: crypto.randomBytes(20).toString("hex"),
     });
     await user.save();
     await confirmationToken.save();
@@ -158,34 +158,38 @@ module.exports.register = async (req, res, next) => {
 };
 
 module.exports.githubLoginAuthentication = async (req, res, next) => {
-  const { code, state } = req.body;
+  const code = req.body.code;
+  const state = req.body.state;
+  console.log("code", code);
+  console.log("state", state);
   if (!code || !state) {
     return res
       .status(400)
-      .send({ error: 'Please provide a github access code and state.' });
+      .send({ error: "Please provide a github access code and state." });
   }
 
   try {
     // Exchange the temporary code with an access token
     const response = await axios.post(
-      'https://github.com/login/oauth/access_token',
+      "https://github.com/login/oauth/access_token",
       {
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        client_id: "22bfe85b0f9406dc9fb2",
+        client_secret: "1a57cf692a00c130b836ea53a7c132ea28e9a74b",
         code,
         state,
       }
     );
-    const accessToken = response.data.split('&')[0].split('=')[1];
+    // console.log(response);
+    const accessToken = response.data.split("&")[0].split("=")[1];
 
     // Retrieve the user's info
-    const githubUser = await axios.get('https://api.github.com/user', {
+    const githubUser = await axios.get("https://api.github.com/user", {
       headers: { Authorization: `token ${accessToken}` },
     });
 
     // Retrieve the user's email addresses
     // Private emails are not provided in the previous request
-    const emails = await axios.get('https://api.github.com/user/emails', {
+    const emails = await axios.get("https://api.github.com/user/emails", {
       headers: { Authorization: `token ${accessToken}` },
     });
     const primaryEmail = emails.data.find((email) => email.primary).email;
@@ -212,7 +216,7 @@ module.exports.githubLoginAuthentication = async (req, res, next) => {
       if (existingUser.email === primaryEmail) {
         return res.status(400).send({
           error:
-            'A user with the same email already exists, please change your primary github email.',
+            "A user with the same email already exists, please change your primary github email.",
         });
       }
       if (existingUser.username === githubUser.data.login.toLowerCase()) {
@@ -255,8 +259,8 @@ module.exports.changePassword = async (req, res, next) => {
 
     const result = await bcrypt.compare(oldPassword, currentPassword);
     if (!result) {
-      return res.status('401').send({
-        error: 'Your old password was entered incorrectly, please try again.',
+      return res.status("401").send({
+        error: "Your old password was entered incorrectly, please try again.",
       });
     }
 
